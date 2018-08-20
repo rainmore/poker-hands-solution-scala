@@ -1,0 +1,27 @@
+plugins {
+    id 'com.github.johnrengelman.shadow' version '2.0.4'
+}
+
+repositories {
+    mavenLocal()
+    mavenCentral()
+}
+
+apply from: 'project/assemble.gradle'
+apply from: 'project/scala.gradle'
+
+apply plugin: 'idea'
+apply plugin: 'application'
+
+
+group = 'au.com.rainmore'
+version = '1.0.0'
+description = 'Poker Hands Solutions (Scala)'
+
+mainClassName = [group, 'Application'].join('.')
+
+jar {
+    manifest {
+        attributes 'Main-Class' : mainClassName
+    }
+}

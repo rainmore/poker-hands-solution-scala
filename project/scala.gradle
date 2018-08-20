@@ -1,0 +1,26 @@
+apply plugin: 'scala'
+
+ext.sclArt = { String artifactId ->
+    sprintf('%s_%s', artifactId, project.ext.get('scala.branch'))
+}
+
+dependencies {
+    compile group: 'org.scala-lang', name: 'scala-library', version: project.ext.get('scala.version')
+    compile group: 'org.scala-lang.modules', name: sclArt('scala-java8-compat'), version: project.ext.get('scala.modules.java8-compat.version')
+}
+
+tasks.withType(ScalaCompile) {
+    scalaCompileOptions.deprecation = false
+    scalaCompileOptions.additionalParameters = ['-feature']
+
+    options.incremental = true
+    options.deprecation = false
+    options.compilerArgs += project.javaLintArgs
+
+    if (System.getenv().containsKey('ZINC_OPTS')) {
+        scalaCompileOptions.additionalParameters += System.env.ZINC_OPTS.tokenize(' ')
+    }
+}
+
+// ignore link warning in scaladoc
+scaladoc.scalaDocOptions.additionalParameters = ['-no-link-warnings']
